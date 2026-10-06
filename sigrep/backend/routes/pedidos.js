@@ -5,27 +5,6 @@ const { AppError } = require('../utils/errors');
 const { requerirTexto, requerirNumeroPositivo, requerirNumeroNoNegativo, requerirEnumerado } = require('../utils/validar');
 const { ESTADOS_PEDIDO_VALIDOS } = require('../constants');
 
-function obtenerPedidoCompleto(id) {
-  const pedido = db
-    .prepare(
-      `SELECT p.*, c.nombre as cliente_nombre FROM pedidos p
-       LEFT JOIN clientes c ON c.id = p.cliente_id WHERE p.id = ?`
-    )
-    .get(id);
-  if (!pedido) return null;
-
-  const productos = db
-    .prepare(
-      `SELECT pp.*, pr.nombre as producto_nombre FROM pedido_producto pp
-       JOIN productos pr ON pr.id = pp.producto_id WHERE pp.pedido_id = ?`
-    )
-    .all(id);
-
-  const total = productos.reduce((sum, p) => sum + p.cantidad * p.precio_unitario, 0);
-
-  return { ...pedido, productos, total: Number(total.toFixed(2)) };
-}
-
 
 router.get('/', (req, res) => {
   const { estado } = req.query;
@@ -42,23 +21,6 @@ router.get('/:id', (req, res) => {
   if (!pedido) throw new AppError('Pedido no encontrado.', 404);
   res.json(pedido);
 });
-
-
-function validarItemsPedido(productos) {
-  if (!Array.isArray(productos) || productos.length === 0) {
-    throw new AppError('El pedido debe incluir al menos un producto.', 400);
-  }
-  return productos.map((item) => {
-    if (!item.producto_id) throw new AppError('Cada producto del pedido requiere producto_id.', 400);
-    const producto = db.prepare('SELECT id FROM productos WHERE id = ?').get(item.producto_id);
-    if (!producto) throw new AppError(`Producto ${item.producto_id} no encontrado.`, 404);
-    return {
-      producto_id: item.producto_id,
-      cantidad: requerirNumeroPositivo(item.cantidad ?? 1, 'cantidad'),
-      precio_unitario: requerirNumeroNoNegativo(item.precio_unitario ?? 0, 'precio_unitario'),
-    };
-  });
-}
 
 
 router.post('/', (req, res) => {
