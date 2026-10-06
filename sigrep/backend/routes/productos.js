@@ -72,44 +72,4 @@ router.delete('/:id', (req, res) => {
 }
              );
 
-
-router.post('/:id/receta', (req, res) => {
-  const { insumo_id } = req.body;
-  const cantidad = requerirNumeroNoNegativo(req.body.cantidad, 'cantidad');
-  if (!insumo_id) throw new AppError('insumo_id es requerido.', 400);
-
-  const producto = db.prepare('SELECT * FROM productos WHERE id = ?').get(req.params.id);
-  const insumo = db.prepare('SELECT * FROM insumos WHERE id = ?').get(insumo_id);
-  if (!producto) throw new AppError('Producto no encontrado.', 404);
-  if (!insumo) throw new AppError('Insumo no encontrado.', 404);
-
-  db.prepare(
-    `INSERT INTO producto_insumo (producto_id, insumo_id, cantidad) VALUES (?, ?, ?)
-     ON CONFLICT(producto_id, insumo_id) DO UPDATE SET cantidad = excluded.cantidad`
-  ).run(req.params.id, insumo_id, cantidad);
-
-  res.status(201).json(inventarioService.calcularCostoProducto(req.params.id));
-}
-           );
-
-
-router.delete('/:id/receta/:insumoId', (req, res) => {
-  db.prepare('DELETE FROM producto_insumo WHERE producto_id = ? AND insumo_id = ?').run(
-    req.params.id,
-    req.params.insumoId
-  
-  );
-  res.json(inventarioService.calcularCostoProducto(req.params.id));
-}
-             );
-
-
-router.post('/:id/producir', (req, res) => {
-  const resultado = inventarioService.producirOVender(req.params.id, req.body.cantidad ?? 1);
-  res.json({
-    mensaje: `Producción de ${resultado.cantidad} x ${resultado.producto.nombre} registrada.`,
-    alertas: resultado.alertas,
-  });
-});
-
 module.exports = router;
