@@ -1,7 +1,5 @@
 # SIGREP — Diseño del sistema
 
-Diagramas del sistema escritos en [Mermaid](https://mermaid.js.org/), que GitHub renderiza directamente en el navegador. Para editarlos basta con modificar el texto de cada bloque.
-
 ## 1. Arquitectura
 
 Aplicación web cliente-servidor. El mismo servidor Express expone la API REST y sirve el frontend estático. El backend se organiza en capas: rutas, servicio de negocio y acceso a la base de datos, con módulos transversales de errores, validación y constantes.
