@@ -9,9 +9,7 @@ Construcción y Evolución de Software.
 ```
 sigrep/
 ├── backend/
-│   ├── server.js          # Servidor Express (API + sirve el frontend)
 │   ├── db/
-│   │   ├── schema.sql   
 │   │   └── init.js        # Inicializa SQLite y datos de ejemplo
 │   └── routes/
 │       ├── insumos.js     
@@ -21,14 +19,14 @@ sigrep/
 │       ├── ventas.js     
 │       └── usuarios.js    
 └── frontend/
-   
+│   ├── css/
+│   │   └── style.css
+│   └── index.html   
 ```
 
 
 ## Notas técnicas
 
-- Es una aplicación web (no nativa), por lo que funciona igual en Pc y
-  iPad desde el navegador, como pide el cliente.
 - Base de datos: SQLite vía `better-sqlite3` 
 - Autenticación: las contraseñas se guardan encriptadas con `bcryptjs`
  
