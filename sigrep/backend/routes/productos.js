@@ -89,16 +89,19 @@ router.post('/:id/receta', (req, res) => {
   ).run(req.params.id, insumo_id, cantidad);
 
   res.status(201).json(inventarioService.calcularCostoProducto(req.params.id));
-});
+}
+           );
 
 
 router.delete('/:id/receta/:insumoId', (req, res) => {
   db.prepare('DELETE FROM producto_insumo WHERE producto_id = ? AND insumo_id = ?').run(
     req.params.id,
     req.params.insumoId
+  
   );
   res.json(inventarioService.calcularCostoProducto(req.params.id));
-});
+}
+             );
 
 
 router.post('/:id/producir', (req, res) => {
