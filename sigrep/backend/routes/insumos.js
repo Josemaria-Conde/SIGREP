@@ -5,7 +5,7 @@ const { AppError } = require('../utils/errors');
 const { requerirTexto, requerirNumeroNoNegativo } = require('../utils/validar');
 const { DIAS_ALERTA_CADUCIDAD } = require('../constants');
 
-// GET /api/insumos - listar todos, con bandera de alerta
+
 router.get('/', (req, res) => {
   const insumos = db.prepare('SELECT * FROM insumos ORDER BY nombre').all();
   const hoy = new Date();
@@ -22,14 +22,14 @@ router.get('/', (req, res) => {
   res.json(conAlertas);
 });
 
-// GET /api/insumos/:id
+
 router.get('/:id', (req, res) => {
   const insumo = db.prepare('SELECT * FROM insumos WHERE id = ?').get(req.params.id);
   if (!insumo) throw new AppError('Insumo no encontrado.', 404);
   res.json(insumo);
 });
 
-// POST /api/insumos - crear
+
 router.post('/', (req, res) => {
   const nombre = requerirTexto(req.body.nombre, 'nombre');
   const unidad = requerirTexto(req.body.unidad, 'unidad');
@@ -47,7 +47,7 @@ router.post('/', (req, res) => {
   res.status(201).json(nuevo);
 });
 
-// PUT /api/insumos/:id - actualizar
+
 router.put('/:id', (req, res) => {
   const existente = db.prepare('SELECT * FROM insumos WHERE id = ?').get(req.params.id);
   if (!existente) throw new AppError('Insumo no encontrado.', 404);
@@ -73,16 +73,14 @@ router.put('/:id', (req, res) => {
   res.json(db.prepare('SELECT * FROM insumos WHERE id = ?').get(req.params.id));
 });
 
-// DELETE /api/insumos/:id
+
 router.delete('/:id', (req, res) => {
   const result = db.prepare('DELETE FROM insumos WHERE id = ?').run(req.params.id);
   if (result.changes === 0) throw new AppError('Insumo no encontrado.', 404);
   res.status(204).send();
 });
 
-// PATCH /api/insumos/:id/ajustar-stock - sumar o restar stock manualmente.
-// "delta" sí puede ser negativo (es una resta intencional); solo se
-// valida que sea un número real y que el resultado nunca baje de cero.
+
 router.patch('/:id/ajustar-stock', (req, res) => {
   const delta = Number(req.body.delta);
   if (!Number.isFinite(delta)) throw new AppError('delta debe ser un número.', 400);
