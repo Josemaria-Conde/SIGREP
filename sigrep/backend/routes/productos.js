@@ -6,21 +6,28 @@ const { requerirTexto, requerirNumeroNoNegativo } = require('../utils/validar');
 const { MARGEN_DEFECTO } = require('../constants');
 const inventarioService = require('../services/inventarioService');
 
-// GET /api/productos - listar con precio calculado
-router.get('/', (req, res) => {
+
+router.get('/', (req, res) => 
+  {
+  
   const productos = db.prepare('SELECT id FROM productos ORDER BY nombre').all();
   res.json(productos.map((p) => inventarioService.calcularCostoProducto(p.id)));
-});
+  }
+          );
 
-// GET /api/productos/:id - detalle con receta y cálculo de costo
-router.get('/:id', (req, res) => {
+
+router.get('/:id', (req, res) =>
+  {
   const resultado = inventarioService.calcularCostoProducto(req.params.id);
   if (!resultado) throw new AppError('Producto no encontrado.', 404);
   res.json(resultado);
-});
 
-// POST /api/productos - crear producto (sin receta aún)
-router.post('/', (req, res) => {
+  }
+          );
+
+
+router.post('/', (req, res) => 
+  {
   const nombre = requerirTexto(req.body.nombre, 'nombre');
   const costoManoObra = requerirNumeroNoNegativo(req.body.costo_mano_obra ?? 0, 'costo_mano_obra');
   const margen = requerirNumeroNoNegativo(req.body.margen_deseado ?? MARGEN_DEFECTO, 'margen_deseado');
@@ -32,9 +39,10 @@ router.post('/', (req, res) => {
     .run(nombre, req.body.descripcion || '', costoManoObra, margen);
 
   res.status(201).json(inventarioService.calcularCostoProducto(result.lastInsertRowid));
-});
 
-// PUT /api/productos/:id - actualizar datos base del producto
+  }
+           );
+
 router.put('/:id', (req, res) => {
   const existente = db.prepare('SELECT * FROM productos WHERE id = ?').get(req.params.id);
   if (!existente) throw new AppError('Producto no encontrado.', 404);
@@ -53,16 +61,18 @@ router.put('/:id', (req, res) => {
   ).run(nombre, descripcion, costoManoObra, margen, req.params.id);
 
   res.json(inventarioService.calcularCostoProducto(req.params.id));
-});
 
-// DELETE /api/productos/:id
+
+}            );
+
 router.delete('/:id', (req, res) => {
   const result = db.prepare('DELETE FROM productos WHERE id = ?').run(req.params.id);
   if (result.changes === 0) throw new AppError('Producto no encontrado.', 404);
   res.status(204).send();
-});
+}
+             );
 
-// POST /api/productos/:id/receta - agregar o actualizar un insumo en la receta
+
 router.post('/:id/receta', (req, res) => {
   const { insumo_id } = req.body;
   const cantidad = requerirNumeroNoNegativo(req.body.cantidad, 'cantidad');
@@ -81,7 +91,7 @@ router.post('/:id/receta', (req, res) => {
   res.status(201).json(inventarioService.calcularCostoProducto(req.params.id));
 });
 
-// DELETE /api/productos/:id/receta/:insumoId - quitar un insumo de la receta
+
 router.delete('/:id/receta/:insumoId', (req, res) => {
   db.prepare('DELETE FROM producto_insumo WHERE producto_id = ? AND insumo_id = ?').run(
     req.params.id,
@@ -90,7 +100,7 @@ router.delete('/:id/receta/:insumoId', (req, res) => {
   res.json(inventarioService.calcularCostoProducto(req.params.id));
 });
 
-// POST /api/productos/:id/producir - registrar producción: descuenta insumos automáticamente
+
 router.post('/:id/producir', (req, res) => {
   const resultado = inventarioService.producirOVender(req.params.id, req.body.cantidad ?? 1);
   res.json({
