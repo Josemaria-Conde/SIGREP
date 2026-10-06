@@ -4,7 +4,6 @@ const db = require('../db/init');
 const { AppError } = require('../utils/errors');
 const inventarioService = require('../services/inventarioService');
 
-// GET /api/ventas - listar ventas
 router.get('/', (req, res) => {
   const ventas = db
     .prepare(
@@ -15,9 +14,7 @@ router.get('/', (req, res) => {
   res.json(ventas);
 });
 
-// POST /api/ventas - registrar venta directa (mostrador).
-// Usa el mismo servicio que "producir" para calcular precio, verificar
-// stock y descontar insumos: una sola fuente de verdad para esa lógica.
+
 router.post('/', (req, res) => {
   const { producto_id } = req.body;
   if (!producto_id) throw new AppError('producto_id es requerido.', 400);
@@ -32,7 +29,7 @@ router.post('/', (req, res) => {
   res.status(201).json({ ...venta, alertas: resultado.alertas });
 });
 
-// GET /api/ventas/reportes/resumen - panel de reportes
+
 router.get('/reportes/resumen', (req, res) => {
   const totalVentas = db.prepare('SELECT COALESCE(SUM(total),0) as t FROM ventas').get().t;
   const numVentas = db.prepare('SELECT COUNT(*) as c FROM ventas').get().c;
