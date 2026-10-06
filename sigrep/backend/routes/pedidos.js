@@ -26,7 +26,7 @@ function obtenerPedidoCompleto(id) {
   return { ...pedido, productos, total: Number(total.toFixed(2)) };
 }
 
-// GET /api/pedidos - listar todos (opcionalmente filtrar por estado)
+
 router.get('/', (req, res) => {
   const { estado } = req.query;
   const pedidos = estado
@@ -36,16 +36,14 @@ router.get('/', (req, res) => {
   res.json(pedidos.map((p) => obtenerPedidoCompleto(p.id)));
 });
 
-// GET /api/pedidos/:id
+
 router.get('/:id', (req, res) => {
   const pedido = obtenerPedidoCompleto(req.params.id);
   if (!pedido) throw new AppError('Pedido no encontrado.', 404);
   res.json(pedido);
 });
 
-// Valida la lista de productos de un pedido antes de tocar la base de
-// datos: cada ítem debe tener un producto_id existente, cantidad entera
-// positiva, y precio_unitario no negativo.
+
 function validarItemsPedido(productos) {
   if (!Array.isArray(productos) || productos.length === 0) {
     throw new AppError('El pedido debe incluir al menos un producto.', 400);
@@ -62,7 +60,7 @@ function validarItemsPedido(productos) {
   });
 }
 
-// POST /api/pedidos - crear pedido con lista de productos [{producto_id, cantidad, precio_unitario}]
+
 router.post('/', (req, res) => {
   const fechaEntrega = requerirTexto(req.body.fecha_entrega, 'fecha_entrega');
   const items = validarItemsPedido(req.body.productos);
@@ -87,7 +85,7 @@ router.post('/', (req, res) => {
   res.status(201).json(obtenerPedidoCompleto(pedidoId));
 });
 
-// PUT /api/pedidos/:id/estado - actualizar solo el estado (flujo de producción)
+
 router.put('/:id/estado', (req, res) => {
   const estado = requerirEnumerado(req.body.estado, ESTADOS_PEDIDO_VALIDOS, 'estado');
   const result = db.prepare('UPDATE pedidos SET estado = ? WHERE id = ?').run(estado, req.params.id);
@@ -95,7 +93,7 @@ router.put('/:id/estado', (req, res) => {
   res.json(obtenerPedidoCompleto(req.params.id));
 });
 
-// PUT /api/pedidos/:id - actualizar datos generales
+
 router.put('/:id', (req, res) => {
   const existente = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(req.params.id);
   if (!existente) throw new AppError('Pedido no encontrado.', 404);
@@ -110,7 +108,7 @@ router.put('/:id', (req, res) => {
   res.json(obtenerPedidoCompleto(req.params.id));
 });
 
-// DELETE /api/pedidos/:id
+
 router.delete('/:id', (req, res) => {
   const result = db.prepare('DELETE FROM pedidos WHERE id = ?').run(req.params.id);
   if (result.changes === 0) throw new AppError('Pedido no encontrado.', 404);
