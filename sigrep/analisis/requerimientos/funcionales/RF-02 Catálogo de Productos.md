@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Se requiere un metodo para el registro de recetas, costo base, tiempo de elaboración aproximado, para ello, el sistema debe permitir registrar y actualizar los productos disponibles, además, el sistema debe llevar un control de disponibilidad para la venta de acuerdo al inventario
+Se requiere un método para el registro de recetas, costo base, tiempo de elaboración aproximado, para ello, el sistema debe permitir registrar y actualizar los productos disponibles, además, el sistema debe llevar un control de la venta de acuerdo al inventario
 
 ## Historia de usuario
 
@@ -15,7 +15,7 @@ Se requiere un metodo para el registro de recetas, costo base, tiempo de elabora
 - [ ] El sistema permite registrar nuevos productos con sus recetas
 - [ ] El sistema permite asignar costo base a cada producto
 - [ ] El sistema permite registrar el tiempo de elaboración aproximado de cada producto
-- [ ] El sistema controla la disponibilidad de cada producto de acuerdo a la cantidad de insumos disponibles
+- [ ] El sistema lanza una alerta para si un producto no es posible de hacer de acuerdo a la cantidad de insumos disponibles (más información en el `RF-05 Verificador de disponibilidad`)
 
 ## Trazabilidad
 
