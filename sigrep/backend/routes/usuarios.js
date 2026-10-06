@@ -6,20 +6,20 @@ const { AppError } = require('../utils/errors');
 const { requerirTexto, requerirEnumerado } = require('../utils/validar');
 const { ROLES_VALIDOS, BCRYPT_SALT_ROUNDS } = require('../constants');
 
-// GET /api/usuarios - listar (nunca se expone el hash de la contraseña)
+
 router.get('/', (req, res) => {
   res.json(db.prepare('SELECT id, nombre, rol, usuario FROM usuarios ORDER BY nombre').all());
 });
 
-// POST /api/usuarios/login
+
+
 router.post('/login', (req, res) => {
   const { usuario, password } = req.body;
   if (!usuario || !password) throw new AppError('usuario y password son requeridos.', 400);
 
   const encontrado = db.prepare('SELECT * FROM usuarios WHERE usuario = ?').get(usuario);
 
-  // Se compara aunque no exista el usuario para no filtrar por tiempo de
-  // respuesta si el usuario existe o no (buena práctica básica de login).
+
   const hashParaComparar = encontrado ? encontrado.password : '$2a$10$invalidoinvalidoinvalidoinvalidoinval';
   const passwordValido = bcrypt.compareSync(password, hashParaComparar);
 
@@ -30,10 +30,10 @@ router.post('/login', (req, res) => {
   res.json({ id: encontrado.id, nombre: encontrado.nombre, rol: encontrado.rol, usuario: encontrado.usuario });
 });
 
-// POST /api/usuarios - crear usuario (rol: dueña o ayudante_produccion)
+
 router.post('/', (req, res) => {
   const nombre = requerirTexto(req.body.nombre, 'nombre');
-  const usuario = requerirTexto(req.body.usuario, 'usuario');
+    const usuario = requerirTexto(req.body.usuario, 'usuario');
   const password = requerirTexto(req.body.password, 'password');
   const rol = requerirEnumerado(req.body.rol, ROLES_VALIDOS, 'rol');
 
