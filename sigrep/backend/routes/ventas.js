@@ -4,4 +4,3 @@ const db = require('../db/init');
 const { AppError } = require('../utils/errors');
 const inventarioService = require('../services/inventarioService');
 
-;
