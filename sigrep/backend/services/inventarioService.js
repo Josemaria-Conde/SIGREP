@@ -4,7 +4,7 @@ const db = require('../db/init');
 const { AppError } = require('../utils/errors');
 const { requerirNumeroPositivo } = require('../utils/validar');
 
-// Obtiene la receta de un producto
+
 function obtenerReceta(productoId) {
   return db
     .prepare(
@@ -16,9 +16,6 @@ function obtenerReceta(productoId) {
     .all(productoId);
 }
 
-// Calcula el desglose de costo y el precio sugerido de un producto:
-// costo_total = costo_insumos + mano_obra
-// precio_sugerido = costo_total * (1 + margen_deseado)
 function calcularCostoProducto(productoId) {
   const producto = db.prepare('SELECT * FROM productos WHERE id = ?').get(productoId);
   if (!producto) return null;
@@ -39,9 +36,6 @@ function calcularCostoProducto(productoId) {
   };
 }
 
-// Verifica que exista stock suficiente de cada insumo de la receta para
-// fabricar "cantidad" unidades del producto. Lanza AppError (400) con un
-// mensaje claro si algún insumo no alcanza.
 function verificarStockSuficiente(receta, cantidad) {
   for (const item of receta) {
     const insumo = db.prepare('SELECT * FROM insumos WHERE id = ?').get(item.insumo_id);
@@ -55,9 +49,7 @@ function verificarStockSuficiente(receta, cantidad) {
   }
 }
 
-// Descuenta del inventario los insumos usados para fabricar "cantidad"
-// unidades del producto. Se ejecuta como una sola transacción: o se
-// descuentan todos los insumos, o no se descuenta ninguno.
+
 function descontarInsumosDeReceta(receta, cantidad) {
   const transaccion = db.transaction(() => {
     for (const item of receta) {
@@ -70,8 +62,7 @@ function descontarInsumosDeReceta(receta, cantidad) {
   transaccion();
 }
 
-// Devuelve los insumos de la receta que quedaron en o por debajo de su
-// stock mínimo después de un descuento, para poder alertar al usuario.
+
 function obtenerAlertasDeStock(receta) {
   return receta
     .map((item) => db.prepare('SELECT * FROM insumos WHERE id = ?').get(item.insumo_id))
