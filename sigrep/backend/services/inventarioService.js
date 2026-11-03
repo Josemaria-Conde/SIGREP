@@ -1,18 +1,10 @@
-// Este servicio centraliza la lógica de negocio que antes estaba
-// duplicada en productos.js (endpoint /producir) y ventas.js (venta de
-// mostrador): calcular costo/precio de un producto según su receta,
-// verificar que haya stock suficiente, y descontar los insumos usados.
-//
-// Tener una sola fuente de verdad evita que un cambio en la fórmula de
-// costeo (por ejemplo, agregar un nuevo cargo fijo) se tenga que
-// recordar aplicar en dos lugares distintos.
+
 
 const db = require('../db/init');
 const { AppError } = require('../utils/errors');
 const { requerirNumeroPositivo } = require('../utils/validar');
 
-// Obtiene la receta de un producto: qué insumos y en qué cantidad
-// requiere fabricar UNA unidad del producto.
+// Obtiene la receta de un producto
 function obtenerReceta(productoId) {
   return db
     .prepare(
@@ -87,9 +79,7 @@ function obtenerAlertasDeStock(receta) {
     .map((insumo) => `${insumo.nombre} está por debajo del stock mínimo (${insumo.stock_actual}${insumo.unidad}).`);
 }
 
-// Operación de alto nivel usada tanto por "producir" como por "vender":
-// valida la cantidad, calcula el costo/precio, verifica stock, descuenta
-// insumos y regresa el resultado junto con posibles alertas.
+
 function producirOVender(productoId, cantidadSolicitada) {
   const cantidad = requerirNumeroPositivo(cantidadSolicitada, 'cantidad');
 
