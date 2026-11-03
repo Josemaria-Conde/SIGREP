@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SIGREP — Alcarusi</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div id="pantallaDeAcceso" class="pantalla-acceso">
+  <form id="formularioDeAcceso" class="tarjeta-acceso">
+    <h1>SIGREP</h1>
+    <p class="subtitulo">Carrusel de Sabor</p>
+    <input type="text" id="campoUsuario" placeholder="Usuario" autocomplete="username" required />
+    <input type="password" id="campoContrasena" placeholder="Contraseña" autocomplete="current-password" required />
+    <button type="submit">Entrar</button>
+    <p id="mensajeDeErrorDeAcceso" class="mensaje-error"></p>
+  </form>
+</div>
+
+<div id="aplicacionPrincipal" class="aplicacion oculto">
+  <aside class="barra-lateral">
+    <h2>SIGREP</h2>
+    <nav>
+      <button data-vista="calculadora" class="boton-nav activo">Calculadora de precios</button>
+      <button data-vista="inventario" class="boton-nav">Inventario</button>
+      <button data-vista="pedidos" class="boton-nav">Pedidos</button>
+      <button data-vista="clientes" class="boton-nav">Clientes</button>
+      <button data-vista="reportes" class="boton-nav">Ventas y reportes</button>
+    </nav>
+    <div class="info-usuario">
+      <span id="nombreDeUsuarioActivo"></span>
+      <button id="botonCerrarSesion">Salir</button>
+    </div>
+  </aside>
+  <main id="contenedorDeVista" class="contenido"></main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/vistas/vistaBase.js"></script>
+<script src="js/vistas/calculadora.js"></script>
+<script src="js/vistas/inventario.js"></script>
+<script src="js/vistas/pedidos.js"></script>
+<script src="js/vistas/clientes.js"></script>
+<script src="js/vistas/reportes.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

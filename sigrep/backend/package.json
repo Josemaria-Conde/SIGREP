@@ -1,0 +1,16 @@
+{
+  "name": "sigrep-backend",
+  "version": "2.0.0",
+  "description": "Sistema Integral de Gestión para Repostería — backend orientado a objetos",
+  "main": "servidor.js",
+  "scripts": {
+    "start": "node servidor.js",
+    "dev": "node servidor.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
