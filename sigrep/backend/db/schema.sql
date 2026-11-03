@@ -1,5 +1,4 @@
--- SIGREP - Esquema de base de datos
--- Alcarusi (Carrusel de Sabor)
+
 
 CREATE TABLE IF NOT EXISTS usuarios (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +23,7 @@ CREATE TABLE IF NOT EXISTS insumos (
   unidad TEXT NOT NULL,          -- g, kg, ml, l, pieza
   stock_actual REAL NOT NULL DEFAULT 0,
   stock_minimo REAL NOT NULL DEFAULT 0,
-  costo_unitario REAL NOT NULL DEFAULT 0,  -- costo por unidad (ej. por gramo)
+  costo_unitario REAL NOT NULL DEFAULT 0,  
   fecha_caducidad TEXT,
   creado_en TEXT DEFAULT (datetime('now'))
 );
@@ -34,7 +33,7 @@ CREATE TABLE IF NOT EXISTS productos (
   nombre TEXT NOT NULL,
   descripcion TEXT,
   costo_mano_obra REAL NOT NULL DEFAULT 0,
-  margen_deseado REAL NOT NULL DEFAULT 0.3, -- 0.3 = 30%
+  margen_deseado REAL NOT NULL DEFAULT 0.3,
   creado_en TEXT DEFAULT (datetime('now'))
 );
 
